@@ -11,14 +11,16 @@ jobs:
     permissions:
       contents: write
     steps:
+      # 第一步：必须先检出（下载）你自己的仓库代码
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+
+      # 第二步：再运行同步工具
       - name: Sync upstream
         uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.1
         with:
-          # 注意：以下参数名已根据该 Action 的要求进行了更正
           upstream_sync_repo: tangly1024/NotionNext
           upstream_sync_branch: main
           target_sync_branch: main
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }} # 使用这个参数名
-
-          # 如果你想在同步失败时（比如有冲突）收到提醒，可以保持默认
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
           test_mode: false
