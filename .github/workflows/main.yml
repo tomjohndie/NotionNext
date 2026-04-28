@@ -2,19 +2,23 @@ name: Scheduled Sync
 
 on:
   schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch: 
+    - cron: '0 0 * * *' # 每天凌晨0点运行 (UTC时间)
+  workflow_dispatch: # 允许手动触发
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    permissions: # 显式添加权限
+    permissions:
       contents: write
     steps:
       - name: Sync upstream
         uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.1
         with:
-          upstream_repository: tangly1024/NotionNext # 记得改这里
-          upstream_branch: main           # 记得改这里
-          target_branch: main             # 记得改这里
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # 注意：以下参数名已根据该 Action 的要求进行了更正
+          upstream_sync_repo: tangly1024/NotionNext
+          upstream_sync_branch: main
+          target_sync_branch: main
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }} # 使用这个参数名
+
+          # 如果你想在同步失败时（比如有冲突）收到提醒，可以保持默认
+          test_mode: false
